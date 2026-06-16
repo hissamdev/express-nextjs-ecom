@@ -77,11 +77,11 @@ const getProduct = async (req, res) => {
                 status: 404,
             });
         }
-        console.log("Fetch product successful");
+        console.log("Fetch product successful logging:", result.rows[0]);
         return res.json({
             success: true,
             message: "Successfully fetched product",
-            data: result.rows,
+            data: result.rows[0],
         });
     } catch (e) {
         console.error("Something went wrong:", e);

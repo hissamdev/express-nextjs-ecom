@@ -1,8 +1,8 @@
-import { Products } from "@/src/types/productTypes";
+import { Product } from "@/src/types/productTypes";
 import Image from "next/image";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
     let products = null;
@@ -15,7 +15,7 @@ export default async function Home() {
         if (!res.ok) {
             console.error("Failed", res.status, res.statusText);
         }
-        const { data }: { data: Products } = await res.json();
+        const { data }: { data: Product[] } = await res.json();
         products = data;
     } catch (e) {
         console.error("Fetch failed", e);

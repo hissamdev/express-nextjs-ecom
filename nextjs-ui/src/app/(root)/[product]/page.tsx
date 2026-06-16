@@ -1,8 +1,8 @@
+import { getProduct } from "@/src/actions/fetchHelper";
 import { AddToCart } from "@/src/components/Cart";
-import { ToggleTheme } from "@/src/components/ui/ToggleDark";
-import { Products } from "@/src/types/productTypes";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -10,27 +10,15 @@ export default async function Page({
     params: Promise<{ product: string }>;
 }) {
     const { product } = await params;
-    console.log(typeof product);
-    let parsed = null;
-    try {
-        console.log("Sending fetch");
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_HOST}/api/products/${product}`,
-        );
-        if (!res.ok) {
-            console.error(res.status, res.statusText);
-        }
-        parsed = await res.json();
-    } catch (e) {
-        console.error("Fetch failed:", e);
+    const productInfo = await getProduct(product);
+    console.log("Logging product", productInfo);
+    if (!productInfo) {
+        notFound();
     }
 
-    const receivedProduct: Products[0] = parsed.data[0];
-    const { heading, description, content, images }: Products[0] =
-        parsed.data[0];
+    const { heading, description, content, images } = productInfo;
     const primaryImage = images.find((i) => i.is_primary === true);
     const fallbackImage = images[0];
-    console.log(images);
 
     return (
         <main>
@@ -69,7 +57,7 @@ export default async function Page({
                                     images.map((image) => (
                                         <div
                                             key={image.image_url}
-                                            className="product-display relative w-[80px] aspect-square"
+                                            className="product-display relative w-20 aspect-square"
                                         >
                                             <Image
                                                 src={image.image_url}
@@ -96,13 +84,12 @@ export default async function Page({
                                 <div className="w-12 h-12 bg-gray-500"></div>
                             </div>
                         </div>
-                        <AddToCart product={receivedProduct} />
+                        <AddToCart product={productInfo} />
                     </div>
                 </div>
 
                 <div className="mt-8">
                     <p>{content}</p>
-                    <ToggleTheme />
                 </div>
             </article>
         </main>

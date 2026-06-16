@@ -1,15 +1,15 @@
-import { Products } from "@/src/types/productTypes";
+import { Product } from "@/src/types/productTypes";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type CartProduct = Products[0] & {
+type CartProduct = Product & {
     qty: number;
 };
 
 type CartStore = {
     items: CartProduct[];
     showCart: boolean;
-    addItem: (product: Products[0]) => void;
+    addItem: (product: Product) => void;
     toggleCart: () => void;
 };
 
